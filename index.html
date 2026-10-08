@@ -1,0 +1,1677 @@
+<!doctype html>
+<!-- CIE Development Control Center — public build. Generated automatically; do not edit. -->
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CIE — Development Control Center</title>
+    <style>
+      /* ── CSS custom properties ── */
+      :root {
+        --bg: #0d1117;
+        --bg2: #161b22;
+        --bg3: #21262d;
+        --border: #30363d;
+        --text: #e6edf3;
+        --text2: #8b949e;
+        --text3: #6e7681;
+        --accent: #388bfd;
+        --accent-muted: #1f3a6e;
+        --done: #3fb950;
+        --in-progress: #d29922;
+        --review: #a371f7;
+        --pr-open: #58a6ff;
+        --ready: #58a6ff;
+        --planned: #6e7681;
+        --blocked: #f85149;
+        --draft: #e3b341;
+        --radius: 6px;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        --font: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      }
+      @media (prefers-color-scheme: light) {
+        :root:not([data-theme="dark"]) {
+          --bg: #f6f8fa;
+          --bg2: #ffffff;
+          --bg3: #f0f2f5;
+          --border: #d0d7de;
+          --text: #24292f;
+          --text2: #57606a;
+          --text3: #8c959f;
+          --accent: #0969da;
+          --accent-muted: #ddf4ff;
+          --done: #1a7f37;
+          --in-progress: #9a6700;
+          --review: #6639ba;
+          --pr-open: #0969da;
+          --ready: #0969da;
+          --planned: #8c959f;
+          --blocked: #d1242f;
+          --draft: #7d4e00;
+          --shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+      }
+      [data-theme="light"] {
+        --bg: #f6f8fa;
+        --bg2: #ffffff;
+        --bg3: #f0f2f5;
+        --border: #d0d7de;
+        --text: #24292f;
+        --text2: #57606a;
+        --text3: #8c959f;
+        --accent: #0969da;
+        --accent-muted: #ddf4ff;
+        --done: #1a7f37;
+        --in-progress: #9a6700;
+        --review: #6639ba;
+        --pr-open: #0969da;
+        --ready: #0969da;
+        --planned: #8c959f;
+        --blocked: #d1242f;
+        --draft: #7d4e00;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        font-size: 14px;
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+        min-height: 100vh;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      button {
+        cursor: pointer;
+        font: inherit;
+      }
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      /* ── Layout ── */
+      .shell {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .topbar {
+        background: var(--bg2);
+        border-bottom: 1px solid var(--border);
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        height: 52px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .topbar-brand {
+        font-weight: 600;
+        font-size: 1rem;
+        letter-spacing: -0.2px;
+        white-space: nowrap;
+      }
+      .topbar-brand span {
+        color: var(--accent);
+      }
+      .topbar-tabs {
+        display: flex;
+        gap: 2px;
+        flex: 1;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .topbar-tabs::-webkit-scrollbar {
+        display: none;
+      }
+      .tab-btn {
+        background: none;
+        border: none;
+        color: var(--text2);
+        padding: 0 12px;
+        height: 52px;
+        font-size: 0.875rem;
+        transition: color 0.15s;
+        border-bottom: 2px solid transparent;
+        white-space: nowrap;
+      }
+      .tab-btn:hover {
+        color: var(--text);
+      }
+      .tab-btn.active {
+        color: var(--text);
+        border-bottom-color: var(--accent);
+        font-weight: 500;
+      }
+      .topbar-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-left: auto;
+      }
+      .btn-icon {
+        background: none;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        color: var(--text2);
+        padding: 5px 10px;
+        font-size: 0.75rem;
+        transition:
+          border-color 0.15s,
+          color 0.15s;
+      }
+      .btn-icon:hover {
+        border-color: var(--accent);
+        color: var(--text);
+      }
+      .main {
+        flex: 1;
+        padding: 20px 16px;
+        max-width: 1280px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      /* ── Views ── */
+      .view {
+        display: none;
+      }
+      .view.active {
+        display: block;
+      }
+
+      /* ── Cards / panels ── */
+      .card {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+        box-shadow: var(--shadow);
+      }
+      .card-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--text2);
+        margin-bottom: 8px;
+      }
+      .card-val {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .card-sub {
+        font-size: 0.75rem;
+        color: var(--text2);
+        margin-top: 2px;
+      }
+
+      /* ── Status badges ── */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 2px 7px;
+        border-radius: 10px;
+        white-space: nowrap;
+      }
+      .badge::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .badge-done {
+        background: color-mix(in srgb, var(--done) 15%, transparent);
+        color: var(--done);
+      }
+      .badge-done::before {
+        background: var(--done);
+      }
+      .badge-in_progress {
+        background: color-mix(in srgb, var(--in-progress) 15%, transparent);
+        color: var(--in-progress);
+      }
+      .badge-in_progress::before {
+        background: var(--in-progress);
+      }
+      .badge-review {
+        background: color-mix(in srgb, var(--review) 15%, transparent);
+        color: var(--review);
+      }
+      .badge-review::before {
+        background: var(--review);
+      }
+      .badge-pr_open {
+        background: color-mix(in srgb, var(--pr-open) 15%, transparent);
+        color: var(--pr-open);
+      }
+      .badge-pr_open::before {
+        background: var(--pr-open);
+      }
+      .badge-ready {
+        background: color-mix(in srgb, var(--ready) 15%, transparent);
+        color: var(--ready);
+      }
+      .badge-ready::before {
+        background: var(--ready);
+        border: 1px solid var(--ready);
+        background: transparent;
+      }
+      .badge-planned {
+        background: color-mix(in srgb, var(--planned) 20%, transparent);
+        color: var(--planned);
+      }
+      .badge-planned::before {
+        background: var(--planned);
+      }
+      .badge-blocked {
+        background: color-mix(in srgb, var(--blocked) 15%, transparent);
+        color: var(--blocked);
+      }
+      .badge-blocked::before {
+        background: var(--blocked);
+      }
+      .badge-draft {
+        background: color-mix(in srgb, var(--draft) 15%, transparent);
+        color: var(--draft);
+      }
+      .badge-draft::before {
+        display: none;
+      }
+
+      /* ── Progress bar ── */
+      .progress-wrap {
+        background: var(--bg3);
+        border-radius: 4px;
+        height: 6px;
+        overflow: hidden;
+      }
+      .progress-bar {
+        background: var(--accent);
+        border-radius: 4px;
+        height: 100%;
+        transition: width 0.4s ease;
+      }
+      .progress-done .progress-bar {
+        background: var(--done);
+      }
+
+      /* ── Grid helpers ── */
+      .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 12px;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 12px;
+      }
+
+      /* ── Overview ── */
+      .overview-hero {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        margin-bottom: 16px;
+      }
+      .overview-hero h1 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .overview-hero .desc {
+        color: var(--text2);
+        font-size: 0.85rem;
+        line-height: 1.6;
+        max-width: 740px;
+      }
+      .overview-hero .question {
+        margin-top: 10px;
+        font-size: 0.8rem;
+        color: var(--text3);
+      }
+      .overview-hero .question strong {
+        color: var(--text2);
+      }
+      .arch-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.75rem;
+        padding: 3px 10px;
+        border-radius: 10px;
+        background: color-mix(in srgb, var(--done) 12%, transparent);
+        color: var(--done);
+        border: 1px solid color-mix(in srgb, var(--done) 25%, transparent);
+        margin-top: 12px;
+      }
+      .section-title {
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--text2);
+        margin: 20px 0 10px;
+      }
+      .status-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .overview-alerts {
+        display: grid;
+        gap: 8px;
+      }
+      .alert {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 10px 12px;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .alert-icon {
+        font-size: 1rem;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .alert-body strong {
+        display: block;
+        font-size: 0.8rem;
+      }
+      .alert-body span {
+        color: var(--text2);
+        font-size: 0.77rem;
+      }
+
+      /* ── Kanban ── */
+      .kanban-toolbar {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+      .kanban-board {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 10px;
+        align-items: start;
+      }
+      .kanban-col {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        min-height: 120px;
+      }
+      .kanban-col-head {
+        padding: 8px 12px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text2);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .kanban-col-head .count {
+        background: var(--bg3);
+        border-radius: 10px;
+        padding: 0 6px;
+        font-size: 0.68rem;
+      }
+      .kanban-cards {
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .kanban-card {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        padding: 8px 10px;
+        cursor: pointer;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
+      }
+      .kanban-card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 15%, transparent);
+      }
+      .kanban-card .kc-code {
+        font-size: 0.65rem;
+        font-family: var(--mono);
+        color: var(--accent);
+        margin-bottom: 3px;
+      }
+      .kanban-card .kc-title {
+        font-size: 0.78rem;
+        font-weight: 500;
+        line-height: 1.3;
+      }
+      .kanban-card .kc-meta {
+        font-size: 0.65rem;
+        color: var(--text3);
+        margin-top: 4px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        align-items: center;
+      }
+      .kanban-card .kc-flags {
+        margin-top: 4px;
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+      .kanban-empty {
+        padding: 12px;
+        text-align: center;
+        color: var(--text3);
+        font-size: 0.75rem;
+      }
+
+      /* ── Tree ── */
+      .tree-toolbar {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+      .search-input {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        color: var(--text);
+        padding: 6px 10px;
+        font-size: 0.8rem;
+        flex: 1;
+        min-width: 180px;
+        max-width: 360px;
+      }
+      .search-input::placeholder {
+        color: var(--text3);
+      }
+      .search-input:focus {
+        border-color: var(--accent);
+        outline: none;
+      }
+      .btn-sm {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        color: var(--text2);
+        padding: 5px 10px;
+        font-size: 0.75rem;
+      }
+      .btn-sm:hover {
+        border-color: var(--accent);
+        color: var(--text);
+      }
+      .tree-root {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+      .tree-node {
+      }
+      .tree-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.1s;
+        border: 1px solid transparent;
+      }
+      .tree-row:hover {
+        background: var(--bg3);
+      }
+      .tree-row.selected {
+        background: var(--accent-muted);
+        border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+      }
+      .tree-row.match {
+        background: color-mix(in srgb, var(--draft) 10%, transparent);
+      }
+      .tree-toggle {
+        width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text3);
+        font-size: 0.7rem;
+        flex-shrink: 0;
+        transition: transform 0.15s;
+      }
+      .tree-toggle.open {
+        transform: rotate(90deg);
+      }
+      .tree-toggle-leaf {
+        width: 16px;
+        flex-shrink: 0;
+      }
+      .tree-num {
+        font-size: 0.65rem;
+        font-family: var(--mono);
+        color: var(--text3);
+        min-width: 36px;
+      }
+      .tree-status {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .tree-title {
+        font-size: 0.82rem;
+        flex: 1;
+      }
+      .tree-chips {
+        display: flex;
+        gap: 4px;
+        flex-wrap: nowrap;
+      }
+      .tree-progress {
+        font-size: 0.65rem;
+        color: var(--text3);
+        white-space: nowrap;
+      }
+      .tree-children {
+        margin-left: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+      .tree-children.hidden {
+        display: none;
+      }
+
+      /* ── Milestones ── */
+      .ms-grid {
+        display: grid;
+        gap: 12px;
+      }
+      .ms-card {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+      }
+      .ms-card.active-ms {
+        border-color: var(--accent);
+      }
+      .ms-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+      .ms-code {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--accent);
+      }
+      .ms-name {
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+      .ms-desc {
+        font-size: 0.78rem;
+        color: var(--text2);
+        margin-bottom: 12px;
+        line-height: 1.5;
+      }
+      .ms-stats {
+        display: flex;
+        gap: 16px;
+        font-size: 0.75rem;
+        color: var(--text2);
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+      }
+      .ms-stats span strong {
+        color: var(--text);
+      }
+      .ms-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .ms-filter-btn {
+        font-size: 0.72rem;
+        padding: 3px 10px;
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        color: var(--accent);
+        cursor: pointer;
+      }
+      .ms-filter-btn:hover {
+        border-color: var(--accent);
+      }
+
+      /* ── Detail panel ── */
+      .detail-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 200;
+        display: none;
+      }
+      .detail-overlay.open {
+        display: block;
+      }
+      .detail-panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(520px, 100vw);
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        z-index: 201;
+        overflow-y: auto;
+        padding: 20px;
+        transform: translateX(100%);
+        transition: transform 0.2s ease;
+      }
+      .detail-panel.open {
+        transform: translateX(0);
+      }
+      .detail-close {
+        float: right;
+        background: none;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        color: var(--text2);
+        padding: 3px 10px;
+        font-size: 0.75rem;
+        margin-bottom: 12px;
+      }
+      .detail-close:hover {
+        border-color: var(--blocked);
+        color: var(--blocked);
+      }
+      .detail-code {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        color: var(--accent);
+        margin-bottom: 4px;
+      }
+      .detail-title {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .detail-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 14px;
+      }
+      .detail-section {
+        margin-bottom: 14px;
+      }
+      .detail-section h4 {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text3);
+        margin-bottom: 6px;
+      }
+      .detail-section p,
+      .detail-section li {
+        font-size: 0.8rem;
+        color: var(--text2);
+        line-height: 1.55;
+      }
+      .detail-section ul {
+        padding-left: 16px;
+      }
+      .detail-section ul li {
+        margin-bottom: 2px;
+      }
+      .detail-kv {
+        font-size: 0.78rem;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .detail-kv-row {
+        display: flex;
+        gap: 6px;
+      }
+      .detail-kv-row .k {
+        color: var(--text3);
+        min-width: 90px;
+        font-size: 0.72rem;
+      }
+      .detail-kv-row .v {
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 0.72rem;
+      }
+      .detail-ev {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .ev-item {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 6px 9px;
+        font-size: 0.75rem;
+      }
+      .ev-item .ev-type {
+        font-family: var(--mono);
+        font-size: 0.65rem;
+        color: var(--accent);
+        margin-bottom: 2px;
+      }
+      .ev-item .ev-desc {
+        color: var(--text2);
+      }
+      .ev-item .ev-note {
+        color: var(--text3);
+        font-size: 0.7rem;
+      }
+      .dep-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .dep-chip {
+        font-size: 0.7rem;
+        font-family: var(--mono);
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 2px 7px;
+        cursor: pointer;
+        color: var(--accent);
+      }
+      .dep-chip:hover {
+        border-color: var(--accent);
+      }
+
+      /* ── Filter select ── */
+      select.filter-sel {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        color: var(--text2);
+        padding: 5px 8px;
+        font-size: 0.78rem;
+        cursor: pointer;
+      }
+      select.filter-sel:focus {
+        border-color: var(--accent);
+        outline: none;
+      }
+
+      /* ── Misc ── */
+      .divider {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 16px 0;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--text3);
+        font-size: 0.85rem;
+      }
+      .no-shrink {
+        flex-shrink: 0;
+      }
+      .mono {
+        font-family: var(--mono);
+      }
+      @media (max-width: 600px) {
+        .topbar {
+          padding: 0 10px;
+        }
+        .main {
+          padding: 12px 10px;
+        }
+        .grid-4 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .kanban-board {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <!-- Topbar -->
+      <header class="topbar" role="banner">
+        <div class="topbar-brand"><span>CIE</span> Control Center</div>
+        <nav class="topbar-tabs" role="tablist" aria-label="Dashboard views">
+          <button class="tab-btn active" role="tab" aria-selected="true" data-view="overview">
+            Overview
+          </button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-view="tree">Tree</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-view="kanban">
+            Kanban
+          </button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-view="milestones">
+            Milestones
+          </button>
+        </nav>
+        <div class="topbar-actions">
+          <button class="btn-icon" id="theme-toggle" aria-label="Toggle light/dark theme">
+            &#9788;
+          </button>
+        </div>
+      </header>
+
+      <!-- Main content -->
+      <main class="main" id="main-content">
+        <!-- ── Overview ──────────────────────────────────────────────────── -->
+        <section id="view-overview" class="view active" role="tabpanel" aria-label="Overview">
+          <div class="overview-hero card" id="hero-card">
+            <div
+              style="
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 12px;
+                flex-wrap: wrap;
+              "
+            >
+              <div>
+                <h1 id="proj-name">Creative Intelligence Engine</h1>
+                <p class="desc" id="proj-desc"></p>
+                <p class="question" id="proj-question-row">
+                  <strong>Strategic question:</strong> <span id="proj-question"></span>
+                </p>
+              </div>
+            </div>
+            <div
+              id="arch-row"
+              style="
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+                margin-top: 12px;
+                align-items: center;
+              "
+            >
+              <span class="arch-status" id="arch-status-badge"></span>
+              <span style="font-size: 0.72rem; color: var(--text3)" id="arch-version"></span>
+            </div>
+          </div>
+
+          <div class="section-title">Phase &amp; Progress</div>
+          <div class="grid-4" id="phase-cards"></div>
+
+          <div class="section-title">Status overview</div>
+          <div class="grid-4" id="status-stat-cards"></div>
+
+          <div class="section-title">Status legend</div>
+          <div class="status-legend" id="status-legend"></div>
+
+          <div class="section-title">Active work &amp; alerts</div>
+          <div class="overview-alerts" id="overview-alerts"></div>
+        </section>
+
+        <!-- ── Tree ──────────────────────────────────────────────────────── -->
+        <section id="view-tree" class="view" role="tabpanel" aria-label="Roadmap tree">
+          <div class="tree-toolbar">
+            <input
+              type="search"
+              class="search-input"
+              id="tree-search"
+              placeholder="Search tasks..."
+              aria-label="Search tasks"
+            />
+            <button class="btn-sm" id="tree-expand-all">Expand all</button>
+            <button class="btn-sm" id="tree-collapse-all">Collapse all</button>
+          </div>
+          <div class="tree-root" id="tree-root" role="tree"></div>
+        </section>
+
+        <!-- ── Kanban ─────────────────────────────────────────────────────── -->
+        <section id="view-kanban" class="view" role="tabpanel" aria-label="Kanban board">
+          <div class="kanban-toolbar">
+            <label style="font-size: 0.78rem; color: var(--text2)"
+              >Phase:
+              <select class="filter-sel" id="kanban-filter-phase" aria-label="Filter by phase">
+                <option value="">All phases</option>
+              </select>
+            </label>
+            <label id="kanban-draft-filter" style="font-size: 0.78rem; color: var(--text2)"
+              >Draft:
+              <select class="filter-sel" id="kanban-filter-draft" aria-label="Filter by draft">
+                <option value="">Show all</option>
+                <option value="no">Hide draft</option>
+                <option value="yes">Draft only</option>
+              </select>
+            </label>
+          </div>
+          <div class="kanban-board" id="kanban-board"></div>
+        </section>
+
+        <!-- ── Milestones ─────────────────────────────────────────────────── -->
+        <section id="view-milestones" class="view" role="tabpanel" aria-label="Milestones">
+          <div class="ms-grid" id="ms-grid"></div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Task detail panel -->
+    <div
+      class="detail-overlay"
+      id="detail-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Task detail"
+    >
+      <aside class="detail-panel" id="detail-panel">
+        <button class="detail-close" id="detail-close">&#x2715; Close</button>
+        <div id="detail-content"></div>
+      </aside>
+    </div>
+
+    <script>
+      // ── Data injected by generator ────────────────────────────────────────────────
+      const PANO_PAYLOAD = {"pano":{"schema":"cie-pano/1","project":{"name":"Creative Intelligence Engine","code":"CIE"},"milestones":[{"id":"m-p0","code":"P0","name":"Phase 0 — Foundation","active":true},{"id":"m-p1","code":"P1","name":"Phase 1 — Product Truth","status":"planned"},{"id":"m-p2","code":"P2","name":"Phase 2 — Research \u0026 Evidence","status":"planned"},{"id":"m-p3","code":"P3","name":"Phase 3 — Consumer Insight \u0026 Motivation Discovery","status":"planned"},{"id":"m-p4","code":"P4","name":"Phase 4 — Creative Hypothesis Engine","status":"planned"},{"id":"m-p5","code":"P5","name":"Phase 5 — Critic, Deduplication \u0026 Prioritization","status":"planned"},{"id":"m-p6","code":"P6","name":"Phase 6 — Master Creative Opportunity Card","status":"planned"},{"id":"m-p7","code":"P7","name":"Phase 7 — Brief Depth Engine","status":"planned"},{"id":"m-p8","code":"P8","name":"Phase 8 — Report, Export \u0026 Handoff","status":"planned"},{"id":"m-p9","code":"P9","name":"Phase 9 — Creative Learning Foundation","status":"planned"}],"nodes":[{"id":"n-p0","title":"Phase 0 — Foundation","type":"group","milestone":"m-p0","children":[{"id":"n-p0-01","code":"P0-01","title":"Repository Skeleton \u0026 Baseline CI","type":"machine","status":"done","milestone":"m-p0"},{"id":"n-p0-02","code":"P0-02","title":"Config and Environment Strategy","type":"machine","status":"ready","milestone":"m-p0","depends_on":["n-p0-01"]}]},{"id":"n-p1","title":"Phase 1 — Product Truth","type":"group","milestone":"m-p1","status":"planned"},{"id":"n-p2","title":"Phase 2 — Research \u0026 Evidence","type":"group","milestone":"m-p2","status":"planned"},{"id":"n-p3","title":"Phase 3 — Consumer Insight \u0026 Motivation Discovery","type":"group","milestone":"m-p3","status":"planned"},{"id":"n-p4","title":"Phase 4 — Creative Hypothesis Engine","type":"group","milestone":"m-p4","status":"planned"},{"id":"n-p5","title":"Phase 5 — Critic, Deduplication \u0026 Prioritization","type":"group","milestone":"m-p5","status":"planned"},{"id":"n-p6","title":"Phase 6 — Master Creative Opportunity Card","type":"group","milestone":"m-p6","status":"planned"},{"id":"n-p7","title":"Phase 7 — Brief Depth Engine","type":"group","milestone":"m-p7","status":"planned"},{"id":"n-p8","title":"Phase 8 — Report, Export \u0026 Handoff","type":"group","milestone":"m-p8","status":"planned"},{"id":"n-p9","title":"Phase 9 — Creative Learning Foundation","type":"group","milestone":"m-p9","status":"planned"}]},"derived":{"flatNodes":{"n-p0":{"path":[],"depth":0,"visibleNumber":"1","isLeaf":false,"nodeId":"n-p0"},"n-p0-01":{"path":["n-p0"],"depth":1,"visibleNumber":"1.1","isLeaf":true,"nodeId":"n-p0-01"},"n-p0-02":{"path":["n-p0"],"depth":1,"visibleNumber":"1.2","isLeaf":true,"nodeId":"n-p0-02"},"n-p1":{"path":[],"depth":0,"visibleNumber":"2","isLeaf":true,"nodeId":"n-p1"},"n-p2":{"path":[],"depth":0,"visibleNumber":"3","isLeaf":true,"nodeId":"n-p2"},"n-p3":{"path":[],"depth":0,"visibleNumber":"4","isLeaf":true,"nodeId":"n-p3"},"n-p4":{"path":[],"depth":0,"visibleNumber":"5","isLeaf":true,"nodeId":"n-p4"},"n-p5":{"path":[],"depth":0,"visibleNumber":"6","isLeaf":true,"nodeId":"n-p5"},"n-p6":{"path":[],"depth":0,"visibleNumber":"7","isLeaf":true,"nodeId":"n-p6"},"n-p7":{"path":[],"depth":0,"visibleNumber":"8","isLeaf":true,"nodeId":"n-p7"},"n-p8":{"path":[],"depth":0,"visibleNumber":"9","isLeaf":true,"nodeId":"n-p8"},"n-p9":{"path":[],"depth":0,"visibleNumber":"10","isLeaf":true,"nodeId":"n-p9"}},"reverseDeps":{"n-p0":[],"n-p0-01":["n-p0-02"],"n-p0-02":[],"n-p1":[],"n-p2":[],"n-p3":[],"n-p4":[],"n-p5":[],"n-p6":[],"n-p7":[],"n-p8":[],"n-p9":[]},"milestoneProgress":{"m-p0":{"percentage":14},"m-p1":{"percentage":0},"m-p2":{"percentage":0},"m-p3":{"percentage":0},"m-p4":{"percentage":0},"m-p5":{"percentage":0},"m-p6":{"percentage":0},"m-p7":{"percentage":0},"m-p8":{"percentage":0},"m-p9":{"percentage":0}},"overallProgress":{"percentage":14},"statusCounts":{"planned":0,"ready":1,"in_progress":0,"review":0,"pr_open":0,"done":1},"activeMilestoneId":"m-p0","lastDoneTaskId":"n-p0-01","nextReadyTaskId":"n-p0-02","blockedCount":0,"awaitingReviewCount":0},"meta":{"generatedAt":"deterministic","sourceHash":"799fe6c9b24d290332c6203099d3617d867da7765af06c9b5666a5bb3f86e7c8"}};
+
+      // ── Shortcuts ────────────────────────────────────────────────────────────────
+      const { pano, derived, meta } = PANO_PAYLOAD;
+      const P = derived;
+
+      // ── Helpers ──────────────────────────────────────────────────────────────────
+      function esc(s) {
+        if (s == null) return "";
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function statusLabel(s) {
+        const labels = {
+          planned: "Planned", ready: "Ready", in_progress: "In Progress",
+          review: "Review", pr_open: "PR Open", done: "Done"
+        };
+        return labels[s] || s || "—";
+      }
+
+      function statusColor(s) {
+        const map = {
+          planned: "var(--planned)", ready: "var(--ready)", in_progress: "var(--in-progress)",
+          review: "var(--review)", pr_open: "var(--pr-open)", done: "var(--done)"
+        };
+        return map[s] || "var(--text3)";
+      }
+
+      function badge(text, cls) {
+        return `<span class="badge ${esc(cls)}">${esc(text)}</span>`;
+      }
+
+      function statusBadge(s) {
+        if (!s) return "";
+        return badge(statusLabel(s), `badge-${s}`);
+      }
+
+      function progressBar(pct, done_class) {
+        return `<div class="progress-wrap ${done_class||""}"><div class="progress-bar" style="width:${pct}%"></div></div>`;
+      }
+
+      function getAllNodes(nodes) {
+        const out = [];
+        function walk(list) {
+          for (const n of list) {
+            out.push(n);
+            if (n.children && n.children.length) walk(n.children);
+          }
+        }
+        walk(nodes);
+        return out;
+      }
+
+      function isLeaf(n) {
+        return !n.children || n.children.length === 0;
+      }
+
+      function getMilestone(id) {
+        return pano.milestones.find(m => m.id === id);
+      }
+
+      function getNode(id) {
+        return getAllNodes(pano.nodes).find(n => n.id === id);
+      }
+
+      function flatInfo(id) {
+        return P.flatNodes[id];
+      }
+
+      // ── Theme toggle ──────────────────────────────────────────────────────────────
+      (function() {
+        const saved = localStorage.getItem("cie-theme");
+        if (saved) document.documentElement.setAttribute("data-theme", saved);
+        document.getElementById("theme-toggle").addEventListener("click", () => {
+          const cur = document.documentElement.getAttribute("data-theme");
+          const next = cur === "light" ? "dark" : "light";
+          document.documentElement.setAttribute("data-theme", next);
+          localStorage.setItem("cie-theme", next);
+        });
+      })();
+
+      // ── Tab navigation ────────────────────────────────────────────────────────────
+      const tabBtns = document.querySelectorAll(".tab-btn");
+      const views = document.querySelectorAll(".view");
+
+      function switchView(viewId) {
+        tabBtns.forEach(b => {
+          const active = b.dataset.view === viewId;
+          b.classList.toggle("active", active);
+          b.setAttribute("aria-selected", active ? "true" : "false");
+        });
+        views.forEach(v => v.classList.toggle("active", v.id === "view-" + viewId));
+        if (viewId === "tree" && !treeBuilt) buildTree();
+        if (viewId === "kanban" && !kanbanBuilt) buildKanban();
+        if (viewId === "milestones" && !msBuilt) buildMilestones();
+      }
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener("click", () => switchView(btn.dataset.view));
+      });
+
+      // ── Overview ──────────────────────────────────────────────────────────────────
+      function buildOverview() {
+        document.getElementById("proj-name").textContent = pano.project.name;
+        // description, product_question and architecture are absent from the public build.
+        if (pano.project.description) {
+          document.getElementById("proj-desc").textContent = pano.project.description;
+        } else {
+          document.getElementById("proj-desc").remove();
+        }
+        if (pano.project.product_question) {
+          document.getElementById("proj-question").textContent = pano.project.product_question;
+        } else {
+          document.getElementById("proj-question-row").remove();
+        }
+
+        const arch = pano.project.architecture;
+        if (arch) {
+          document.getElementById("arch-status-badge").textContent =
+            arch.status === "frozen" ? "✓ Architecture frozen" : "Architecture " + arch.status;
+          document.getElementById("arch-version").textContent =
+            `${arch.version || ""}${arch.adrs ? " · " + arch.adrs + " ADRs" : ""}`;
+        } else {
+          document.getElementById("arch-row").remove();
+        }
+
+        // Phase cards
+        const phaseCards = document.getElementById("phase-cards");
+        const activeMsId = P.activeMilestoneId;
+        const activeMs = pano.milestones.find(m => m.id === activeMsId);
+        const prog = P.overallProgress;
+
+        phaseCards.innerHTML = `
+          <div class="card">
+            <div class="card-title">Active Phase</div>
+            <div class="card-val" style="font-size:1rem;margin-top:4px;">${esc(activeMs ? activeMs.name : "—")}</div>
+            <div class="card-sub">${esc(activeMs ? activeMs.code : "")}</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Overall Progress</div>
+            <div class="card-val">${prog.percentage}<span style="font-size:1rem">%</span></div>
+            <div style="margin-top:6px;">${progressBar(prog.percentage, prog.percentage===100?"progress-done":"")}</div>
+            ${prog.total !== undefined ? `<div class="card-sub">${prog.done} / ${prog.total} tasks done</div>` : ""}
+          </div>
+          <div class="card">
+            ${(() => {
+              const tid = P.currentTaskId || P.nextReadyTaskId;
+              const label = P.currentTaskId ? "Current Task" : "Next Task";
+              const t = tid ? getNode(tid) || {} : null;
+              return `<div class="card-title">${label}</div>
+            <div class="card-val" style="font-size:.85rem;margin-top:4px;">${esc(t ? t.title || "—" : "None")}</div>
+            <div class="card-sub">${t && (t.code || tid) ? esc(t.code || tid) : ""}</div>`;
+            })()}
+          </div>
+          <div class="card">
+            <div class="card-title">Last Completed</div>
+            <div class="card-val" style="font-size:.85rem;margin-top:4px;">${esc(P.lastDoneTaskId ? (getNode(P.lastDoneTaskId)||{}).title || "—" : "None")}</div>
+            <div class="card-sub">${P.lastDoneTaskId ? esc((getNode(P.lastDoneTaskId)||{}).code||"") : ""}</div>
+          </div>
+        `;
+
+        // Status stat cards
+        const sc = P.statusCounts;
+        const statCards = document.getElementById("status-stat-cards");
+        const total = Object.values(sc).reduce((a,b) => a+b, 0);
+        const statDefs = [
+          { key: "done", label: "Done" },
+          { key: "in_progress", label: "In Progress" },
+          { key: "pr_open", label: "PR Open" },
+          { key: "review", label: "Review" },
+          { key: "ready", label: "Ready" },
+          { key: "planned", label: "Planned" },
+        ];
+        statCards.innerHTML = statDefs.map(d => `
+          <div class="card">
+            <div class="card-title">${esc(d.label)}</div>
+            <div class="card-val" style="color:${statusColor(d.key)}">${sc[d.key]||0}</div>
+            <div class="card-sub">of ${total} leaf tasks</div>
+          </div>
+        `).join("");
+
+        // Status legend
+        const legend = document.getElementById("status-legend");
+        legend.innerHTML = [
+          { s: "planned", desc: "Known roadmap work, not yet ready" },
+          { s: "ready", desc: "Scope defined; deps satisfied" },
+          { s: "in_progress", desc: "Implementation underway" },
+          { s: "review", desc: "Complete; awaiting architecture/product review" },
+          { s: "pr_open", desc: "PR exists; merge/CI pending" },
+          { s: "done", desc: "Evidence verified; merged" },
+        ].map(x => `<span class="badge badge-${x.s}" title="${esc(x.desc)}">${esc(statusLabel(x.s))}</span>`).join("");
+
+        // Alerts
+        const alerts = document.getElementById("overview-alerts");
+        const items = [];
+
+        if (P.nextReadyTaskId) {
+          const t = getNode(P.nextReadyTaskId);
+          items.push({ icon: "▶", label: "Next ready task", desc: `${t.code ? t.code + " — " : ""}${t.title}`, action: () => openDetail(P.nextReadyTaskId) });
+        }
+        if (P.currentTaskId) {
+          const t = getNode(P.currentTaskId);
+          items.push({ icon: "⚡", label: "Active work", desc: `${t.code ? t.code + " — " : ""}${t.title} [${statusLabel(t.status)}]`, action: () => openDetail(P.currentTaskId) });
+        }
+        if (P.awaitingReviewCount > 0) {
+          items.push({ icon: "👁", label: "Awaiting review", desc: `${P.awaitingReviewCount} task(s) in review or PR Open state` });
+        }
+        if (P.blockedCount > 0) {
+          items.push({ icon: "⛔", label: "Blocked", desc: `${P.blockedCount} task(s) are blocked` });
+        }
+
+        if (items.length === 0) {
+          alerts.innerHTML = `<div class="alert"><span class="alert-icon">✓</span><div class="alert-body"><strong>No alerts</strong><span>No active work, blocks, or review items.</span></div></div>`;
+        } else {
+          alerts.innerHTML = items.map(item => `
+            <div class="alert" style="cursor:${item.action?'pointer':'default'}" tabindex="${item.action?'0':'-1'}" role="${item.action?'button':''}" data-action="true">
+              <span class="alert-icon">${esc(item.icon)}</span>
+              <div class="alert-body"><strong>${esc(item.label)}</strong><span>${esc(item.desc)}</span></div>
+            </div>
+          `).join("");
+          alerts.querySelectorAll("[data-action]").forEach((el, i) => {
+            if (items[i].action) {
+              el.addEventListener("click", items[i].action);
+              el.addEventListener("keydown", e => { if (e.key==="Enter"||e.key===" ") items[i].action(); });
+            }
+          });
+        }
+      }
+
+      // ── Tree view ─────────────────────────────────────────────────────────────────
+      let treeBuilt = false;
+      let treeExpanded = {};
+
+      function buildTree() {
+        treeBuilt = true;
+        renderTree();
+
+        document.getElementById("tree-expand-all").addEventListener("click", () => {
+          getAllNodes(pano.nodes).forEach(n => { if (!isLeaf(n)) treeExpanded[n.id] = true; });
+          renderTree();
+        });
+        document.getElementById("tree-collapse-all").addEventListener("click", () => {
+          treeExpanded = {};
+          renderTree();
+        });
+        document.getElementById("tree-search").addEventListener("input", (e) => {
+          treeSearchQuery = e.target.value.trim().toLowerCase();
+          renderTree();
+        });
+      }
+
+      let treeSearchQuery = "";
+
+      function treeMatchIds(nodes, query) {
+        if (!query) return new Set();
+        const matched = new Set();
+        function walk(list, ancestors) {
+          for (const n of list) {
+            const text = ((n.title||"") + " " + (n.code||"") + " " + (n.id||"")).toLowerCase();
+            if (text.includes(query)) {
+              matched.add(n.id);
+              for (const a of ancestors) matched.add(a);
+            }
+            if (n.children && n.children.length) walk(n.children, [...ancestors, n.id]);
+          }
+        }
+        walk(nodes, []);
+        return matched;
+      }
+
+      function renderTree() {
+        const root = document.getElementById("tree-root");
+        const matchIds = treeMatchIds(pano.nodes, treeSearchQuery);
+        root.innerHTML = "";
+        root.appendChild(buildTreeNodes(pano.nodes, 0, matchIds, ""));
+      }
+
+      function buildTreeNodes(nodes, depth, matchIds, parentNum) {
+        const frag = document.createDocumentFragment();
+        let counter = 0;
+        for (const n of nodes) {
+          counter++;
+          const visNum = parentNum ? `${parentNum}.${counter}` : `${counter}`;
+          const hasChildren = n.children && n.children.length > 0;
+          const isExpanded = treeExpanded[n.id] !== false && (treeExpanded[n.id] === true || treeSearchQuery !== "" || depth < 1);
+          const matched = matchIds.size > 0 && matchIds.has(n.id);
+
+          if (matchIds.size > 0 && !matched && !hasChildren) {
+            const anyChildMatch = hasChildren && [...matchIds].some(mid => {
+              const fn = P.flatNodes[mid];
+              return fn && fn.path.includes(n.id);
+            });
+            if (!anyChildMatch && !matched) continue;
+          }
+
+          const row = document.createElement("div");
+          row.className = "tree-row" + (matched ? " match" : "");
+          row.setAttribute("role", "treeitem");
+          row.setAttribute("aria-expanded", hasChildren ? String(isExpanded) : undefined);
+          row.dataset.id = n.id;
+          row.tabIndex = 0;
+
+          const toggleEl = document.createElement("span");
+          if (hasChildren) {
+            toggleEl.className = "tree-toggle" + (isExpanded ? " open" : "");
+            toggleEl.textContent = "▶";
+            toggleEl.setAttribute("aria-hidden", "true");
+          } else {
+            toggleEl.className = "tree-toggle-leaf";
+          }
+
+          const numEl = document.createElement("span");
+          numEl.className = "tree-num";
+          numEl.textContent = visNum;
+
+          const statusDot = document.createElement("span");
+          statusDot.className = "tree-status";
+          statusDot.style.background = n.status ? statusColor(n.status) : "var(--border)";
+          statusDot.title = n.status ? statusLabel(n.status) : "No status";
+          if (!isLeaf(n)) statusDot.style.opacity = "0.4";
+
+          const titleEl = document.createElement("span");
+          titleEl.className = "tree-title";
+          titleEl.textContent = n.title || n.id;
+
+          const chips = document.createElement("span");
+          chips.className = "tree-chips";
+          if (n.code) {
+            const c = document.createElement("span");
+            c.className = "badge";
+            c.style.cssText = "font-size:.6rem;font-family:var(--mono);background:var(--accent-muted);color:var(--accent);";
+            c.textContent = n.code;
+            chips.appendChild(c);
+          }
+          if (n.draft) {
+            const d = document.createElement("span");
+            d.className = "badge badge-draft";
+            d.textContent = "draft";
+            chips.appendChild(d);
+          }
+          if (n.blocked) {
+            const b = document.createElement("span");
+            b.className = "badge badge-blocked";
+            b.textContent = "blocked";
+            chips.appendChild(b);
+          }
+          if (!hasChildren && n.status) {
+            const s = document.createElement("span");
+            s.className = `badge badge-${n.status}`;
+            s.textContent = statusLabel(n.status);
+            chips.appendChild(s);
+          }
+
+          if (hasChildren) {
+            const prog = document.createElement("span");
+            prog.className = "tree-progress";
+            const msId = n.milestone;
+            const pdata = msId ? P.milestoneProgress[msId] : null;
+            if (pdata) prog.textContent = `${pdata.percentage}%`;
+            chips.appendChild(prog);
+          }
+
+          row.appendChild(toggleEl);
+          row.appendChild(numEl);
+          row.appendChild(statusDot);
+          row.appendChild(titleEl);
+          row.appendChild(chips);
+
+          row.addEventListener("click", (e) => {
+            e.stopPropagation();
+            if (hasChildren) {
+              treeExpanded[n.id] = !isExpanded;
+              renderTree();
+            } else {
+              openDetail(n.id);
+            }
+          });
+          row.addEventListener("keydown", e => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              row.click();
+            }
+          });
+
+          const nodeWrap = document.createElement("div");
+          nodeWrap.className = "tree-node";
+          nodeWrap.appendChild(row);
+
+          if (hasChildren) {
+            const childWrap = document.createElement("div");
+            childWrap.className = "tree-children" + (isExpanded ? "" : " hidden");
+            childWrap.appendChild(buildTreeNodes(n.children, depth+1, matchIds, visNum));
+            nodeWrap.appendChild(childWrap);
+          }
+
+          frag.appendChild(nodeWrap);
+        }
+        return frag;
+      }
+
+      // ── Kanban ────────────────────────────────────────────────────────────────────
+      let kanbanBuilt = false;
+
+      function buildKanban() {
+        kanbanBuilt = true;
+
+        const filterPhase = document.getElementById("kanban-filter-phase");
+        pano.milestones.forEach(ms => {
+          const opt = document.createElement("option");
+          opt.value = ms.id;
+          opt.textContent = ms.code + " — " + ms.name;
+          filterPhase.appendChild(opt);
+        });
+
+        filterPhase.addEventListener("change", renderKanban);
+        document.getElementById("kanban-filter-draft").addEventListener("change", renderKanban);
+        if (!getAllNodes(pano.nodes).some(n => n.draft)) {
+          document.getElementById("kanban-draft-filter").hidden = true;
+        }
+
+        renderKanban();
+      }
+
+      function renderKanban() {
+        const phaseFilter = document.getElementById("kanban-filter-phase").value;
+        const draftFilter = document.getElementById("kanban-filter-draft").value;
+
+        const allLeafs = getAllNodes(pano.nodes).filter(n => isLeaf(n) && n.type !== "group");
+        const filtered = allLeafs.filter(n => {
+          if (phaseFilter && n.milestone !== phaseFilter) return false;
+          if (draftFilter === "no" && n.draft) return false;
+          if (draftFilter === "yes" && !n.draft) return false;
+          return true;
+        });
+
+        const cols = ["planned","ready","in_progress","review","pr_open","done"];
+        const colLabels = {
+          planned: "Planned", ready: "Ready", in_progress: "In Progress",
+          review: "Review", pr_open: "PR Open", done: "Done"
+        };
+
+        const board = document.getElementById("kanban-board");
+        board.innerHTML = cols.map(status => {
+          const cards = filtered.filter(n => (n.status||"planned") === status);
+          return `
+            <div class="kanban-col">
+              <div class="kanban-col-head">
+                <span>${esc(colLabels[status])}</span>
+                <span class="count">${cards.length}</span>
+              </div>
+              <div class="kanban-cards" data-status="${status}">
+                ${cards.length === 0
+                  ? `<div class="kanban-empty">Empty</div>`
+                  : cards.map(n => buildKanbanCard(n)).join("")}
+              </div>
+            </div>
+          `;
+        }).join("");
+
+        board.querySelectorAll(".kanban-card").forEach(card => {
+          card.addEventListener("click", () => openDetail(card.dataset.id));
+          card.addEventListener("keydown", e => { if (e.key==="Enter"||e.key===" ") openDetail(card.dataset.id); });
+        });
+      }
+
+      function buildKanbanCard(n) {
+        const ms = n.milestone ? getMilestone(n.milestone) : null;
+        const fn = P.flatNodes[n.id];
+        return `
+          <div class="kanban-card" data-id="${esc(n.id)}" tabindex="0" role="button" aria-label="${esc(n.title)}">
+            ${n.code ? `<div class="kc-code">${esc(n.code)}</div>` : ""}
+            <div class="kc-title">${esc(n.title)}</div>
+            <div class="kc-meta">
+              ${ms ? `<span>${esc(ms.code)}</span>` : ""}
+              ${n.branch ? `<span class="mono" style="font-size:.62rem;color:var(--text3);">${esc(n.branch)}</span>` : ""}
+            </div>
+            <div class="kc-flags">
+              ${n.draft ? `<span class="badge badge-draft">draft</span>` : ""}
+              ${n.blocked ? `<span class="badge badge-blocked">blocked</span>` : ""}
+            </div>
+          </div>
+        `;
+      }
+
+      // ── Milestones ────────────────────────────────────────────────────────────────
+      let msBuilt = false;
+
+      function buildMilestones() {
+        msBuilt = true;
+        const grid = document.getElementById("ms-grid");
+        grid.innerHTML = pano.milestones.map(ms => buildMsCard(ms)).join("");
+        grid.querySelectorAll(".ms-filter-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            document.getElementById("kanban-filter-phase").value = btn.dataset.ms;
+            switchView("kanban");
+            if (!kanbanBuilt) buildKanban();
+            else renderKanban();
+          });
+        });
+      }
+
+      function buildMsCard(ms) {
+        const prog = P.milestoneProgress[ms.id] || { done: 0, total: 0, percentage: 0 };
+        const all = getAllNodes(pano.nodes).filter(n => n.milestone === ms.id && isLeaf(n) && n.type !== "group");
+        const blocked = all.filter(n => n.blocked).length;
+
+        return `
+          <div class="ms-card${ms.active ? " active-ms" : ""}">
+            <div class="ms-head">
+              <div>
+                <div class="ms-code">${esc(ms.code)}</div>
+                <div class="ms-name">${esc(ms.name)}</div>
+              </div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                ${ms.active ? `<span class="badge badge-in_progress">Active</span>` : ""}
+                ${ms.draft ? `<span class="badge badge-draft">Draft</span>` : ""}
+                ${ms.status ? statusBadge(ms.status) : ""}
+              </div>
+            </div>
+            ${ms.description ? `<p class="ms-desc">${esc(ms.description)}</p>` : ""}
+            <div style="margin-bottom:8px;">${progressBar(prog.percentage, prog.percentage===100?"progress-done":"")}</div>
+            <div class="ms-stats">
+              <span><strong>${prog.percentage}%</strong> complete</span>
+              ${prog.total !== undefined ? `<span><strong>${prog.done}</strong> / <strong>${prog.total}</strong> tasks done</span>` : ""}
+              ${blocked > 0 ? `<span style="color:var(--blocked)"><strong>${blocked}</strong> blocked</span>` : ""}
+            </div>
+            <div class="ms-actions">
+              <button class="ms-filter-btn" data-ms="${esc(ms.id)}">View in Kanban →</button>
+            </div>
+          </div>
+        `;
+      }
+
+      // ── Detail panel ──────────────────────────────────────────────────────────────
+      function openDetail(nodeId) {
+        const n = getNode(nodeId);
+        if (!n) return;
+        const panel = document.getElementById("detail-panel");
+        const overlay = document.getElementById("detail-overlay");
+        const content = document.getElementById("detail-content");
+
+        const fn = P.flatNodes[n.id];
+        const ms = n.milestone ? getMilestone(n.milestone) : null;
+        const deps = (n.depends_on || []).map(d => getNode(d)).filter(Boolean);
+        const revDeps = (P.reverseDeps[n.id] || []).map(d => getNode(d)).filter(Boolean);
+
+        let html = "";
+
+        if (n.code) html += `<div class="detail-code">${esc(n.code)}</div>`;
+        html += `<div class="detail-title">${esc(n.title)}</div>`;
+
+        html += `<div class="detail-badges">`;
+        if (n.status) html += statusBadge(n.status);
+        if (n.type && n.type !== "group") html += badge(n.type, "badge-planned");
+        if (n.draft) html += badge("draft", "badge-draft");
+        if (n.blocked) html += badge("blocked", "badge-blocked");
+        if (ms) html += badge(ms.code, "badge-planned");
+        html += `</div>`;
+
+        html += `<div class="detail-section"><div class="detail-kv">`;
+        if (fn) html += `<div class="detail-kv-row"><span class="k">Position</span><span class="v">${esc(fn.visibleNumber)} (depth ${fn.depth})</span></div>`;
+        if (n.branch) html += `<div class="detail-kv-row"><span class="k">Branch</span><span class="v">${esc(n.branch)}</span></div>`;
+        if (n.pr) html += `<div class="detail-kv-row"><span class="k">PR</span><span class="v">${esc(n.pr.ref)}${n.pr.note ? " (" + esc(n.pr.note) + ")" : ""}</span></div>`;
+        if (n.owner) html += `<div class="detail-kv-row"><span class="k">Owner</span><span class="v">${esc(n.owner)}</span></div>`;
+        if (n.blocked) html += `<div class="detail-kv-row"><span class="k">Blocked</span><span class="v" style="color:var(--blocked)">${esc(n.blocked)}</span></div>`;
+        html += `</div></div>`;
+
+        if (n.description) {
+          html += `<div class="detail-section"><h4>Description</h4><p>${esc(n.description)}</p></div>`;
+        }
+
+        if (n.acceptance_criteria && n.acceptance_criteria.length) {
+          html += `<div class="detail-section"><h4>Acceptance criteria</h4><ul>`;
+          n.acceptance_criteria.forEach(c => { html += `<li>${esc(c)}</li>`; });
+          html += `</ul></div>`;
+        }
+
+        if (n.expected_output) {
+          html += `<div class="detail-section"><h4>Expected output</h4><p>${esc(n.expected_output)}</p></div>`;
+        }
+
+        if (deps.length > 0) {
+          html += `<div class="detail-section"><h4>Depends on</h4><div class="dep-list">`;
+          deps.forEach(d => { html += `<span class="dep-chip" data-id="${esc(d.id)}">${esc(d.code || d.id)} — ${esc(d.title)}</span>`; });
+          html += `</div></div>`;
+        }
+
+        if (revDeps.length > 0) {
+          html += `<div class="detail-section"><h4>Required by</h4><div class="dep-list">`;
+          revDeps.forEach(d => { html += `<span class="dep-chip" data-id="${esc(d.id)}">${esc(d.code || d.id)} — ${esc(d.title)}</span>`; });
+          html += `</div></div>`;
+        }
+
+        if (n.evidence && n.evidence.length) {
+          html += `<div class="detail-section"><h4>Evidence</h4><div class="detail-ev">`;
+          n.evidence.forEach(ev => {
+            html += `<div class="ev-item"><div class="ev-type">${esc(ev.type)}</div>`;
+            if (ev.sha) html += `<div class="ev-desc mono">${esc(ev.sha)}</div>`;
+            if (ev.ref) html += `<div class="ev-desc">${esc(ev.ref)}</div>`;
+            if (ev.description) html += `<div class="ev-desc">${esc(ev.description)}</div>`;
+            if (ev.note) html += `<div class="ev-note">${esc(ev.note)}</div>`;
+            html += `</div>`;
+          });
+          html += `</div></div>`;
+        }
+
+        if (n.files && n.files.length) {
+          html += `<div class="detail-section"><h4>Related files</h4><ul>`;
+          n.files.forEach(f => { html += `<li class="mono" style="font-size:.72rem;">${esc(f)}</li>`; });
+          html += `</ul></div>`;
+        }
+
+        content.innerHTML = html;
+
+        // Wire dep-chip clicks
+        content.querySelectorAll(".dep-chip").forEach(chip => {
+          chip.addEventListener("click", () => openDetail(chip.dataset.id));
+        });
+
+        overlay.classList.add("open");
+        panel.classList.add("open");
+        panel.querySelector(".detail-close").focus();
+      }
+
+      function closeDetail() {
+        document.getElementById("detail-overlay").classList.remove("open");
+        document.getElementById("detail-panel").classList.remove("open");
+      }
+
+      document.getElementById("detail-close").addEventListener("click", closeDetail);
+      document.getElementById("detail-overlay").addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) closeDetail();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeDetail();
+      });
+
+      // ── Init ──────────────────────────────────────────────────────────────────────
+      buildOverview();
+    </script>
+  </body>
+</html>
