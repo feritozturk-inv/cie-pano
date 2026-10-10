@@ -515,6 +515,33 @@
       }
 
       /* ── Tree ── */
+      .tree-summary {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 10px 12px;
+        margin-bottom: 12px;
+      }
+      .tree-summary-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .tree-summary-head .card-title {
+        margin-bottom: 0;
+      }
+      .tree-summary-val {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .tree-summary-sub {
+        font-size: 0.72rem;
+        color: var(--text3);
+        margin-top: 6px;
+      }
       .tree-toolbar {
         display: flex;
         gap: 8px;
@@ -970,6 +997,12 @@
 
         <!-- ── Tree ──────────────────────────────────────────────────────── -->
         <section id="view-tree" class="view" role="tabpanel" aria-label="Roadmap tree">
+          <div
+            class="tree-summary"
+            id="tree-summary"
+            role="group"
+            aria-label="Overall progress"
+          ></div>
           <div class="tree-toolbar">
             <input
               type="search"
@@ -1266,8 +1299,26 @@
       let treeBuilt = false;
       let treeExpanded = {};
 
+      // Reads the same canonical progress object as the Overview card. The public build
+      // publishes the percentage only, so the task count line appears only when the
+      // counts are present — exactly like the Overview card.
+      function treeProgressHtml(prog) {
+        const raw = prog ? Number(prog.percentage) : NaN;
+        const pct = Number.isFinite(raw) ? Math.min(100, Math.max(0, Math.round(raw))) : 0;
+        const counts = prog && Number.isFinite(prog.total) && Number.isFinite(prog.done)
+          ? `<div class="tree-summary-sub">${esc(prog.done)} / ${esc(prog.total)} tasks completed</div>`
+          : "";
+        return `<div class="tree-summary-head">
+            <span class="card-title">Overall Progress</span>
+            <span class="tree-summary-val">${pct}%</span>
+          </div>
+          ${progressBar(pct, pct === 100 ? "progress-done" : "")}
+          ${counts}`;
+      }
+
       function buildTree() {
         treeBuilt = true;
+        document.getElementById("tree-summary").innerHTML = treeProgressHtml(P.overallProgress);
         renderTree();
 
         document.getElementById("tree-expand-all").addEventListener("click", () => {
